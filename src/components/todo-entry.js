@@ -1,11 +1,38 @@
 import React, {Component} from 'react';
 
 export default class TodoEntry extends Component {
+    constructor() {
+        super()
+
+        this.state = {
+            err: ''
+        }
+    }
+
+    /*
+     * Validate the task input, if not given, or already exists, change error message,
+     * otherwise, error message clear
+     */
+    validateTask(task) {
+       return this.props.validateTask(task)
+    }
 
     createTask(e) {
         e.preventDefault()
 
-        this.props.createTask(this.refs.taskInput.value)
+        let task = this.refs.taskInput.value;
+
+        let validateMsg = this.validateTask(task)
+
+        this.setState({
+            err: validateMsg
+        })
+
+        if (validateMsg) return
+
+        this.props.createTask(task)
+        this.refs.taskInput.value = ''
+        // task = ''
     }
 
     render() {
@@ -22,6 +49,7 @@ export default class TodoEntry extends Component {
                     </button>
 
                 </form>
+                <div style={{color: "red"}}>{this.state.err}</div>
 
             </div>
         )

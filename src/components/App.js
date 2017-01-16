@@ -39,22 +39,53 @@ class App extends Component {
         this.setState({todos})
     }
 
-    // deleteTask(task) {
-    //     let todos = this.state.todos
-    //     _.remove(todos, todo => todo.task = task)
-    //     this.setState({
-    //         todos
-    //     })
-    // }
+    deleteTask(task) {
+        console.log('delete task', task)
+        const todos = this.state.todos
+        _.remove(todos, todo => todo.task === task)
+        this.setState({
+            todos
+        })
+    }
+
+    toggleTask(task) {
+        console.log('toggle complete', task)
+        const todos = this.state.todos
+        const todo = todos.find(todo => todo.task === task)
+        todo.isCompleted = !todo.isCompleted
+        this.setState({
+            todos
+        })
+    }
+
+    /*
+     * Validate the task input, if not given, or already exists, change error message,
+     * otherwise, error message clear
+     */
+    validateTask(task) {
+        if (!task) {
+            return 'Please input task name'
+        } else if (this.state.todos.find(todo => todo.task === task)) {
+            return 'This task already exists'
+        } else {
+            return ''
+        }
+    }
 
     render() {
         return (
             <div>
                 <h1>React Todos App</h1>
-                <TodoEntry createTask={this.createTask.bind(this)}/>
+                <TodoEntry
+                    createTask={this.createTask.bind(this)}
+                    validateTask={this.validateTask.bind(this)}
+                />
                 <TodoList
                     todos={this.state.todos}
                     editTask={this.editTask.bind(this)}
+                    deleteTask={this.deleteTask.bind(this)}
+                    toggleTask={this.toggleTask.bind(this)}
+                    validateTask={this.validateTask.bind(this)}
                 />
             </div>
         )
